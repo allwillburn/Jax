@@ -63,8 +63,6 @@ JaxMenu.AutoIgnite:Boolean("Ignite", "Ignite if killable", true)
 
 JaxMenu:SubMenu("Drawings", "Drawings")
 JaxMenu.Drawings:Boolean("DQ", "Draw Q Range", true)
-JaxMenu.Drawings:Boolean("DE", "Draw E Range", true)
-
 
 JaxMenu:SubMenu("SkinChanger", "SkinChanger")
 JaxMenu.SkinChanger:Boolean("Skin", "UseSkinChanger", true)
