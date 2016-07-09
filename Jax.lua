@@ -190,17 +190,17 @@ OnTick(function (myHero)
           end
         end 
         if JaxMenu.AutoMode.W:Value() then        
-          if Ready(_W) then
+          if Ready(_W) and ValidTarget(target, 700) then
 	  	      CastSpell(_W)
           end
         end
         if JaxMenu.AutoMode.E:Value() then        
-	  if Ready(_E) then
+	  if Ready(_E) and ValidTarget(target, 700) then
 		      CastSpell(_E)
 	  end
         end
         if JaxMenu.AutoMode.R:Value() then        
-	  if Ready(_R) then
+	  if Ready(_R) and ValidTarget(target, 700) then
 		      CastSpell(_R)
 	  end
         end
