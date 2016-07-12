@@ -1,3 +1,5 @@
+local ver = "0.02"
+
 if FileExist(COMMON_PATH.."MixLib.lua") then
  require('MixLib')
 else
@@ -18,6 +20,9 @@ function AutoUpdate(data)
         PrintChat('<font color = "#00FFFF">No updates found!')
     end
 end
+
+GetWebResultAsync("https://raw.githubusercontent.com/allwillburn/Jax/master/Jax.version", AutoUpdate)
+
 
 GetLevelPoints = function(unit) return GetLevel(unit) - (GetCastLevel(unit,0)+GetCastLevel(unit,1)+GetCastLevel(unit,2)+GetCastLevel(unit,3)) end
 local SetDCP, SkinChanger = 0
