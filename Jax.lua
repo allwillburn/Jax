@@ -1,4 +1,4 @@
-local ver = "0.03"
+local ver = "0.04"
 
 if FileExist(COMMON_PATH.."MixLib.lua") then
  require('MixLib')
@@ -128,7 +128,7 @@ OnTick(function (myHero)
 				CastSpell(_E)
 			end
 	    
-            if JaxMenu.Combo.R:Value() and Ready(_R) then
+            if JaxMenu.Combo.R:Value() and Ready(_R) and ValidTarget(target, 700) then
 				CastSpell(_R)
                         end
 
