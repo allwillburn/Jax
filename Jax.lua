@@ -1,4 +1,6 @@
-local ver = "0.05"
+
+
+local ver = "0.06"
 
 if FileExist(COMMON_PATH.."MixLib.lua") then
  require('MixLib')
@@ -36,12 +38,13 @@ JaxMenu.Combo:Boolean("W", "Use W in combo", true)
 JaxMenu.Combo:Boolean("E", "Use E in combo", true)
 JaxMenu.Combo:Boolean("R", "Use R in combo", true)
 JaxMenu.Combo:Boolean("Tiamat", "Use Tiamat", true)
+JaxMenu.Combo:Boolean("BOTRK", "Use BOTRK", true)
 JaxMenu.Combo:Boolean("RHydra", "Use RHydra", true)
 JaxMenu.Combo:Boolean("YGB", "Use GhostBlade", true)
 JaxMenu.Combo:Boolean("Gunblade", "Use Gunblade", true)
 
 JaxMenu:SubMenu("AutoMode", "AutoMode")
-JaxMenu.AutoMode:Boolean("Level", "Auto level spells", true)
+JaxMenu.AutoMode:Boolean("Level", "Auto level spells", false)
 JaxMenu.AutoMode:Boolean("Ghost", "Auto Ghost", false)
 JaxMenu.AutoMode:Boolean("Q", "Auto Q", false)
 JaxMenu.AutoMode:Boolean("W", "Auto W", false)
@@ -50,6 +53,7 @@ JaxMenu.AutoMode:Boolean("R", "Auto R", false)
 
 JaxMenu:SubMenu("LaneClear", "LaneClear")
 JaxMenu.LaneClear:Boolean("Q", "Use Q", true)
+JaxMenu.LaneClear:Boolean("W", "Use W", true)
 JaxMenu.LaneClear:Boolean("E", "Use E", true)
 JaxMenu.LaneClear:Boolean("RHydra", "Use RHydra", true)
 JaxMenu.LaneClear:Boolean("Tiamat", "Use Tiamat", true)
@@ -78,6 +82,7 @@ OnTick(function (myHero)
 	local RHydra = GetItemSlot(myHero, 3074)
 	local Tiamat = GetItemSlot(myHero, 3077)
         local Gunblade = GetItemSlot(myHero, 3146)
+        local BOTRK = GetItemSlot(myHero, 3150)
 
 	--AUTO LEVEL UP
 	if JaxMenu.AutoMode.Level:Value() then
@@ -104,6 +109,10 @@ OnTick(function (myHero)
 		if Mix:Mode() == "Combo" then
             if JaxMenu.Combo.YGB:Value() and YGB > 0 and Ready(YGB) and ValidTarget(target, 700) then
 			CastSpell(YGB)
+            end
+
+            if JaxMenu.Combo.BOTRK:Value() and BOTRK > 0 and Ready(BOTRK) and ValidTarget(target, 700) then
+			CastTargetSpell(target, BOTRK)
             end
 
             if JaxMenu.Combo.Q:Value() and Ready(_Q) and ValidTarget(target, 700) then
@@ -175,9 +184,15 @@ OnTick(function (myHero)
 	        if JaxMenu.LaneClear.Q:Value() and Ready(_Q) and ValidTarget(closeminion, 700) then
 	        	CastTargetSpell(closeminion, _Q)
                 end
+
+                if JaxMenu.LaneClear.W:Value() and Ready(_W) and ValidTarget(closeminion, 700) then
+	        	CastSpell(_W)
+	        end
+
                 if JaxMenu.LaneClear.E:Value() and Ready(_E) and ValidTarget(closeminion, 187) then
 	        	CastSpell(_E)
 	        end
+
                 if JaxMenu.LaneClear.Tiamat:Value() and ValidTarget(closeminion, 350) then
 			CastSpell(Tiamat)
 		end
@@ -226,6 +241,33 @@ OnDraw(function (myHero)
 	end
 
 end)
+
+
+OnProcessSpell(function(unit, spell)
+	local target = GetCurrentTarget()
+
+        if unit.isMe and spell.name:lower():find("jaxleapstrike") then 
+		Mix:ResetAA()	
+	end
+
+        if unit.isMe and spell.name:lower():find("jaxcounterstrike") then 
+		Mix:ResetAA()	
+	end
+
+        if unit.isMe and spell.name:lower():find("jaxempowertwo") then 
+		Mix:ResetAA()	
+	end
+
+        if unit.isMe and spell.name:lower():find("jaxrelentlessassault") then 
+		Mix:ResetAA()	
+	end
+
+        if unit.isMe and spell.name:lower():find("itemtiamatcleave") then
+		Mix:ResetAA()
+	end	
+
+end) 
+
 
 local function SkinChanger()
 	if JaxMenu.SkinChanger.UseSkinChanger:Value() then
