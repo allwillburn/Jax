@@ -1,6 +1,4 @@
-
-
-local ver = "0.06"
+local ver = "0.07"
 
 if FileExist(COMMON_PATH.."MixLib.lua") then
  require('MixLib')
@@ -82,7 +80,7 @@ OnTick(function (myHero)
 	local RHydra = GetItemSlot(myHero, 3074)
 	local Tiamat = GetItemSlot(myHero, 3077)
         local Gunblade = GetItemSlot(myHero, 3146)
-        local BOTRK = GetItemSlot(myHero, 3150)
+        local BOTRK = GetItemSlot(myHero, 3153)
 
 	--AUTO LEVEL UP
 	if JaxMenu.AutoMode.Level:Value() then
