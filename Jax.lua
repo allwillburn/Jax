@@ -1,4 +1,4 @@
-local ver = "0.07"
+local ver = "0.08"
 
 if FileExist(COMMON_PATH.."MixLib.lua") then
  require('MixLib')
@@ -7,15 +7,17 @@ else
  DownloadFileAsync("https://raw.githubusercontent.com/VTNEETS/NEET-Scripts/master/MixLib.lua", COMMON_PATH.."MixLib.lua", function() PrintChat("Downloaded MixLib. Please 2x F6!") return end)
 end
 
+
 if GetObjectName(GetMyHero()) ~= "Jax" then return end
+
 
 require("DamageLib")
 
 function AutoUpdate(data)
     if tonumber(data) > tonumber(ver) then
-        PrintChat('<font color = "#00FFFF">New Jax version found! ' .. data)
+        PrintChat('<font color = "#00FFFF">New version found! ' .. data)
         PrintChat('<font color = "#00FFFF">Downloading update, please wait...')
-        DownloadFileAsync('https://raw.githubusercontent.com/allwillburn/Jax/master/Jax.lua', SCRIPT_PATH .. 'Jax.lua', function() PrintChat('<font color = "#00FFFF">Jax Update Complete, please 2x F6!') return end)
+        DownloadFileAsync('https://raw.githubusercontent.com/allwillburn/Jax/master/Jax.lua', SCRIPT_PATH .. 'Jax.lua', function() PrintChat('<font color = "#00FFFF">Update Complete, please 2x F6!') return end)
     else
         PrintChat('<font color = "#00FFFF">No updates found!')
     end
@@ -35,6 +37,7 @@ JaxMenu.Combo:Boolean("Q", "Use Q in combo", true)
 JaxMenu.Combo:Boolean("W", "Use W in combo", true)
 JaxMenu.Combo:Boolean("E", "Use E in combo", true)
 JaxMenu.Combo:Boolean("R", "Use R in combo", true)
+JaxMenu.Combo:Boolean("Cutlass", "Use Cutlass", true)
 JaxMenu.Combo:Boolean("Tiamat", "Use Tiamat", true)
 JaxMenu.Combo:Boolean("BOTRK", "Use BOTRK", true)
 JaxMenu.Combo:Boolean("RHydra", "Use RHydra", true)
@@ -81,65 +84,76 @@ OnTick(function (myHero)
 	local Tiamat = GetItemSlot(myHero, 3077)
         local Gunblade = GetItemSlot(myHero, 3146)
         local BOTRK = GetItemSlot(myHero, 3153)
+        local Cutlass = GetItemSlot(myHero, 3144)
 
 	--AUTO LEVEL UP
 	if JaxMenu.AutoMode.Level:Value() then
 
-			spellorder = {_Q, _E, _W, _W, _W, _R, _W, _Q, _W, _Q, _R, _Q, _Q, _E, _E, _R, _E, _E}
+			spellorder = {_E, _W, _Q, _W, _W, _R, _W, _Q, _W, _Q, _R, _Q, _Q, _E, _E, _R, _E, _E}
 			if GetLevelPoints(myHero) > 0 then
 				LevelSpell(spellorder[GetLevel(myHero) + 1 - GetLevelPoints(myHero)])
 			end
 	end
         
         --Harass
-                if Mix:Mode() == "Harass" then
+          if Mix:Mode() == "Harass" then
             if JaxMenu.Harass.Q:Value() and Ready(_Q) and ValidTarget(target, 700) then
 				if target ~= nil then 
                                       CastTargetSpell(target, _Q)
                                 end
             end
-            if JaxMenu.Harass.W:Value() and Ready(_W) then
+
+            if JaxMenu.Harass.W:Value() and Ready(_W) and ValidTarget(target, 700) then
 				CastSpell(_W)
-                       end     
-            end
+            end     
+          end
 
 	--COMBO
-		if Mix:Mode() == "Combo" then
+	  if Mix:Mode() == "Combo" then
             if JaxMenu.Combo.YGB:Value() and YGB > 0 and Ready(YGB) and ValidTarget(target, 700) then
 			CastSpell(YGB)
             end
 
             if JaxMenu.Combo.BOTRK:Value() and BOTRK > 0 and Ready(BOTRK) and ValidTarget(target, 700) then
-			CastTargetSpell(target, BOTRK)
+			 CastTargetSpell(target, BOTRK)
             end
 
-            if JaxMenu.Combo.Q:Value() and Ready(_Q) and ValidTarget(target, 700) then
-				if target ~= nil then 
-                                      CastTargetSpell(target, _Q)
-                                end
+            if JaxMenu.Combo.Cutlass:Value() and Cutlass > 0 and Ready(Cutlass) and ValidTarget(target, 700) then
+			 CastTargetSpell(target, Cutlass)
             end
+
+            if JaxMenu.Combo.E:Value() and Ready(_E) and ValidTarget(target, 125) then
+			 CastSpell(_E)
+	    end
+
+            if JaxMenu.Combo.Q:Value() and Ready(_Q) and ValidTarget(target, 700) then
+		     if target ~= nil then 
+                         CastTargetSpell(target, _Q)
+                     end
+            end
+
             if JaxMenu.Combo.Tiamat:Value() and Tiamat > 0 and Ready(Tiamat) and ValidTarget(target, 350) then
 			CastSpell(Tiamat)
             end
+
             if JaxMenu.Combo.Gunblade:Value() and Gunblade > 0 and Ready(Gunblade) and ValidTarget(target, 700) then
 			CastTargetSpell(target, Gunblade)
             end
+
             if JaxMenu.Combo.RHydra:Value() and RHydra > 0 and Ready(RHydra) and ValidTarget(target, 400) then
 			CastSpell(RHydra)
             end
 
 	    if JaxMenu.Combo.W:Value() and Ready(_W) and ValidTarget(target, 700) then
 				CastSpell(_W)
-	                end
-	    if JaxMenu.Combo.E:Value() and Ready(_E) and ValidTarget(target, 125) then
-				CastSpell(_E)
-			end
+	    end
+	    
 	    
             if JaxMenu.Combo.R:Value() and Ready(_R) and ValidTarget(target, 700) then
 				CastSpell(_R)
-                        end
-
             end
+
+          end
 
          --AUTO IGNITE
 	for _, enemy in pairs(GetEnemyHeroes()) do
@@ -242,27 +256,19 @@ end)
 
 
 OnProcessSpell(function(unit, spell)
-	local target = GetCurrentTarget()
-
-        if unit.isMe and spell.name:lower():find("jaxleapstrike") then 
-		Mix:ResetAA()	
-	end
-
-        if unit.isMe and spell.name:lower():find("jaxcounterstrike") then 
-		Mix:ResetAA()	
-	end
-
+	local target = GetCurrentTarget()        
+       
         if unit.isMe and spell.name:lower():find("jaxempowertwo") then 
 		Mix:ResetAA()	
-	end
-
-        if unit.isMe and spell.name:lower():find("jaxrelentlessassault") then 
-		Mix:ResetAA()	
-	end
+	end        
 
         if unit.isMe and spell.name:lower():find("itemtiamatcleave") then
 		Mix:ResetAA()
 	end	
+               
+        if unit.isMe and spell.name:lower():find("itemravenoushydracrescent") then
+		Mix:ResetAA()
+	end
 
 end) 
 
