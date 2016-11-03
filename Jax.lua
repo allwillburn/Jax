@@ -1,4 +1,4 @@
-local ver = "0.08"
+local ver = "0.09"
 
 if FileExist(COMMON_PATH.."MixLib.lua") then
  require('MixLib')
