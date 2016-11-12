@@ -122,7 +122,7 @@ OnTick(function (myHero)
 			 CastTargetSpell(target, Cutlass)
             end
 
-            if JaxMenu.Combo.E:Value() and Ready(_E) and ValidTarget(target, 125) then
+            if JaxMenu.Combo.E:Value() and Ready(_E) and ValidTarget(target, 700) then
 			 CastSpell(_E)
 	    end
 
