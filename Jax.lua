@@ -1,4 +1,10 @@
-local ver = "0.09"
+local ver = "0.11"
+
+if FileExist(COMMON_PATH.."MixLib.lua") then
+ require('MixLib')
+else
+ PrintChat("MixLib not found. Please wait for download.")
+ DownloadFileAsync("https://raw.githubusercontent.com/VTNEETS/NEET-Scripts/master/MixLib.lua", COMMON_PATH.."MixLib.lua", function() PrintChat("Downloaded MixLib. Please 2x F6!") return end)local ver = "0.11"
 
 if FileExist(COMMON_PATH.."MixLib.lua") then
  require('MixLib')
@@ -37,12 +43,15 @@ JaxMenu.Combo:Boolean("Q", "Use Q in combo", true)
 JaxMenu.Combo:Boolean("W", "Use W in combo", true)
 JaxMenu.Combo:Boolean("E", "Use E in combo", true)
 JaxMenu.Combo:Boolean("R", "Use R in combo", true)
+JaxMenu.Combo:Slider("RX", "X Enemies to Cast R",3,1,5,1)
 JaxMenu.Combo:Boolean("Cutlass", "Use Cutlass", true)
 JaxMenu.Combo:Boolean("Tiamat", "Use Tiamat", true)
 JaxMenu.Combo:Boolean("BOTRK", "Use BOTRK", true)
 JaxMenu.Combo:Boolean("RHydra", "Use RHydra", true)
 JaxMenu.Combo:Boolean("YGB", "Use GhostBlade", true)
 JaxMenu.Combo:Boolean("Gunblade", "Use Gunblade", true)
+JaxMenu.Combo:Boolean("Randuins", "Use Randuins", true)
+
 
 JaxMenu:SubMenu("AutoMode", "AutoMode")
 JaxMenu.AutoMode:Boolean("Level", "Auto level spells", false)
@@ -85,6 +94,7 @@ OnTick(function (myHero)
         local Gunblade = GetItemSlot(myHero, 3146)
         local BOTRK = GetItemSlot(myHero, 3153)
         local Cutlass = GetItemSlot(myHero, 3144)
+        local Randuins = GetItemSlot(myHero, 3143)
 
 	--AUTO LEVEL UP
 	if JaxMenu.AutoMode.Level:Value() then
@@ -114,7 +124,11 @@ OnTick(function (myHero)
 			CastSpell(YGB)
             end
 
-            if JaxMenu.Combo.BOTRK:Value() and BOTRK > 0 and Ready(BOTRK) and ValidTarget(target, 700) then
+            if JaxMenu.Combo.Randuins:Value() and Randuins > 0 and Ready(Randuins) and ValidTarget(target, 500) then
+			CastSpell(Randuins)
+            end
+
+            if JaxMenu.Combo.BOTRK:Value() and BOTRK > 0 and Ready(BOTRK) and ValidTarget(target, 550) then
 			 CastTargetSpell(target, BOTRK)
             end
 
@@ -145,12 +159,12 @@ OnTick(function (myHero)
             end
 
 	    if JaxMenu.Combo.W:Value() and Ready(_W) and ValidTarget(target, 700) then
-				CastSpell(_W)
+			CastSpell(_W)
 	    end
 	    
 	    
-            if JaxMenu.Combo.R:Value() and Ready(_R) and ValidTarget(target, 700) then
-				CastSpell(_R)
+            if JaxMenu.Combo.R:Value() and Ready(_R) and ValidTarget(target, 700) and (EnemiesAround(myHeroPos(), 700) >= JaxMenu.Combo.RX:Value()) then
+			CastSpell(_R)
             end
 
           end
@@ -210,7 +224,7 @@ OnTick(function (myHero)
 		end
 	
 		if JaxMenu.LaneClear.RHydra:Value() and ValidTarget(closeminion, 400) then
-                        CastSpell(RHydra)
+                        CastTargetSpell(closeminion, RHydra)
       	        end
           end
       end
@@ -285,3 +299,13 @@ end
 
 print('<font color = "#01DF01"><b>Jax</b> <font color = "#01DF01">by <font color = "#01DF01"><b>Allwillburn</b> <font color = "#01DF01">Loaded!')
 
+
+end
+
+
+if GetObjectName(GetMyHero()) ~= "Jax" then return end
+
+
+require("DamageLib")
+
+function AutoUpdate(data)
