@@ -294,18 +294,12 @@ local function SkinChanger()
 			GlobalSkin = SetDCP
 		end
         end
-end
+end)
 
 
 print('<font color = "#01DF01"><b>Jax</b> <font color = "#01DF01">by <font color = "#01DF01"><b>Allwillburn</b> <font color = "#01DF01">Loaded!')
 
 
-end
+end)
 
 
-if GetObjectName(GetMyHero()) ~= "Jax" then return end
-
-
-require("DamageLib")
-
-function AutoUpdate(data)
