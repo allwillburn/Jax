@@ -294,7 +294,7 @@ local function SkinChanger()
 			GlobalSkin = SetDCP
 		end
         end
-end)
+end
 
 
 print('<font color = "#01DF01"><b>Jax</b> <font color = "#01DF01">by <font color = "#01DF01"><b>Allwillburn</b> <font color = "#01DF01">Loaded!')
